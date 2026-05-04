@@ -1,0 +1,11 @@
+numpy==2.0.2
+scikit-learn==1.6.1
+pandas==2.2.2
+joblib==1.5.3
+imbalanced-learn==0.14.1
+streamlit==1.28.0
+plotly==5.17.0
+opencv-python-
+
+headless==4.9.0.80
+pillow==10.1.0

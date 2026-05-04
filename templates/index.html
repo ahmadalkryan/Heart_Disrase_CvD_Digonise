@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>نظام تشخيص أمراض القلب</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+      }
+
+      .header h1 {
+        font-size: 32px;
+        margin-bottom: 10px;
+      }
+
+      .header p {
+        font-size: 16px;
+        opacity: 0.9;
+      }
+
+      .content {
+        display: flex;
+        padding: 30px;
+        gap: 30px;
+      }
+
+      .sidebar {
+        width: 280px;
+        background: #f8f9ff;
+        border-radius: 15px;
+        padding: 20px;
+      }
+
+      .main {
+        flex: 1;
+      }
+
+      .model-card {
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 15px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .model-card:hover {
+        border-color: #667eea;
+        transform: translateX(-5px);
+      }
+
+      .model-card.active {
+        border-color: #667eea;
+        background: #f0f2ff;
+      }
+
+      .model-icon {
+        font-size: 24px;
+        margin-bottom: 5px;
+      }
+
+      .model-name {
+        font-weight: bold;
+        font-size: 16px;
+      }
+
+      .model-accuracy {
+        font-size: 12px;
+        color: #666;
+        margin-top: 5px;
+      }
+
+      .input-group {
+        margin-bottom: 20px;
+      }
+
+      .input-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .input-group input,
+      .input-group select {
+        width: 100%;
+        padding: 10px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: border-color 0.3s ease;
+      }
+
+      .input-group input:focus,
+      .input-group select:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      .btn-predict {
+        width: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 15px;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+      }
+
+      .btn-predict:hover {
+        transform: translateY(-2px);
+      }
+
+      .result-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        margin-top: 20px;
+        text-align: center;
+        display: none;
+      }
+
+      .result-card.show {
+        display: block;
+      }
+
+      .result-healthy {
+        background: #e8f5e9;
+        border: 2px solid #2ecc71;
+      }
+
+      .result-disease {
+        background: #ffebee;
+        border: 2px solid #e74c3c;
+      }
+
+      .result-icon {
+        font-size: 48px;
+        margin-bottom: 10px;
+      }
+
+      .result-title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .result-probability {
+        font-size: 36px;
+        font-weight: bold;
+        margin: 10px 0;
+      }
+
+      .result-risk {
+        font-size: 18px;
+        margin: 10px 0;
+      }
+
+      .result-recommendation {
+        background: rgba(0, 0, 0, 0.05);
+        padding: 15px;
+        border-radius: 10px;
+        margin-top: 15px;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 20px;
+        display: none;
+      }
+
+      .loading.show {
+        display: block;
+      }
+
+      .spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #667eea;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .content {
+          flex-direction: column;
+        }
+        .sidebar {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>❤️ نظام تشخيص أمراض القلب</h1>
+        <p>
+          أداة مساعدة للكشف المبكر عن خطر الإصابة بأمراض القلب باستخدام الذكاء
+          الاصطناعي
+        </p>
+      </div>
+
+      <div class="content">
+        <div class="sidebar">
+          <h3>🎯 اختر النموذج</h3>
+          <div class="model-card active" data-model="top5">
+            <div class="model-icon">⭐</div>
+            <div class="model-name">النموذج المتوازن (5 ميزات)</div>
+            <div class="model-accuracy">الدقة: 89.32% | Gradient Boosting</div>
+          </div>
+          <div class="model-card" data-model="top3">
+            <div class="model-icon">⚡</div>
+            <div class="model-name">النموذج السريع (3 ميزات)</div>
+            <div class="model-accuracy">
+              الدقة: 83.15% | Logistic Regression
+            </div>
+          </div>
+          <div class="model-card" data-model="all11">
+            <div class="model-icon">🏆</div>
+            <div class="model-name">النموذج الشامل (11 ميزة)</div>
+            <div class="model-accuracy">الدقة: 88.04% | Gradient Boosting</div>
+          </div>
+
+          <hr style="margin: 15px 0" />
+
+          <h3>📊 تفسير النتائج</h3>
+          <p><span style="color: #e74c3c">🔴 > 70%</span> - خطر عالي</p>
+          <p><span style="color: #f39c12">🟡 30-70%</span> - خطر متوسط</p>
+          <p><span style="color: #2ecc71">🟢 < 30%</span> - خطر منخفض</p>
+
+          <hr style="margin: 15px 0" />
+
+          <p style="font-size: 12px; color: #666">
+            ⚠️ هذه الأداة لأغراض توعوية فقط. لا تُغني عن استشارة الطبيب.
+          </p>
+        </div>
+
+        <div class="main">
+          <h3>📝 أدخل بيانات المريض</h3>
+
+          <div id="inputs-container">
+            <!-- سيتم ملء الحقول ديناميكياً حسب النموذج المختار -->
+          </div>
+
+          <button class="btn-predict" id="predictBtn">🔍 تشخيص</button>
+
+          <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p style="margin-top: 10px">جاري التحليل...</p>
+          </div>
+
+          <div class="result-card" id="resultCard">
+            <!-- يتم ملء النتيجة هنا -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // تعريف الميزات لكل نموذج
+      const FEATURES = {
+        top3: ["ST slope", "exercise angina", "chest pain type"],
+        top5: [
+          "ST slope",
+          "exercise angina",
+          "chest pain type",
+          "oldpeak",
+          "max heart rate",
+        ],
+        all11: [
+          "age",
+          "sex",
+          "chest pain type",
+          "resting bp s",
+          "cholesterol",
+          "fasting blood sugar",
+          "resting ecg",
+          "max heart rate",
+          "exercise angina",
+          "oldpeak",
+          "ST slope",
+        ],
+      };
+
+      // الأسماء العربية للميزات
+      const FEATURES_AR = {
+        "ST slope": "ميل مقطع ST",
+        "exercise angina": "ذبحة أثناء الجهد",
+        "chest pain type": "نوع ألم الصدر",
+        oldpeak: "انخفاض ST",
+        "max heart rate": "أقصى معدل لضربات القلب",
+        age: "العمر",
+        sex: "الجنس",
+        "resting bp s": "ضغط الدم الانقباضي",
+        cholesterol: "الكوليسترول",
+        "fasting blood sugar": "سكر الدم الصائم",
+        "resting ecg": "تخطيط القلب",
+      };
+
+      // خيارات الميزات
+      const OPTIONS = {
+        "ST slope": [1, 2, 3],
+        "exercise angina": [0, 1],
+        "chest pain type": [1, 2, 3, 4],
+        sex: [0, 1],
+      };
+
+      let currentModel = "top5";
+
+      // تحديث حقول الإدخال حسب النموذج
+      function updateInputs() {
+        const container = document.getElementById("inputs-container");
+        const features = FEATURES[currentModel];
+
+        container.innerHTML = "";
+
+        features.forEach((feature) => {
+          const div = document.createElement("div");
+          div.className = "input-group";
+
+          const label = document.createElement("label");
+          label.textContent = FEATURES_AR[feature] || feature;
+
+          let input;
+          if (OPTIONS[feature]) {
+            input = document.createElement("select");
+            OPTIONS[feature].forEach((opt) => {
+              const option = document.createElement("option");
+              option.value = opt;
+              option.textContent = opt;
+              input.appendChild(option);
+            });
+          } else {
+            input = document.createElement("input");
+            input.type = "number";
+            input.step = "any";
+            if (feature === "age") input.value = 55;
+            else if (feature === "max heart rate") input.value = 150;
+            else if (feature === "oldpeak") input.value = 0.6;
+            else if (feature === "resting bp s") input.value = 120;
+            else if (feature === "cholesterol") input.value = 200;
+            else input.value = 0;
+          }
+
+          input.id = `input_${feature}`;
+          div.appendChild(label);
+          div.appendChild(input);
+          container.appendChild(div);
+        });
+      }
+
+      // جمع البيانات من حقول الإدخال
+      function collectData() {
+        const features = FEATURES[currentModel];
+        const data = {};
+        features.forEach((feature) => {
+          const input = document.getElementById(`input_${feature}`);
+          if (input) {
+            data[feature] = parseFloat(input.value);
+          }
+        });
+        return data;
+      }
+
+      // عرض النتيجة
+      function displayResult(result) {
+        const resultCard = document.getElementById("resultCard");
+        const isHealthy = result.result === "HEALTHY";
+
+        resultCard.className = `result-card ${isHealthy ? "result-healthy" : "result-disease"} show`;
+
+        resultCard.innerHTML = `
+                <div class="result-icon">${isHealthy ? "🟢" : "🔴"}</div>
+                <div class="result-title">${isHealthy ? "✅ خطر منخفض" : "⚠️ ارتفاع خطر الإصابة!"}</div>
+                <div class="result-probability">${result.probability_percent}</div>
+                <div class="result-risk">مستوى الخطر: ${result.risk_level_ar}</div>
+                <div class="result-recommendation">
+                    <strong>💡 التوصية:</strong> ${result.recommendation_ar}<br>
+                    <small style="color: gray;">النموذج: ${result.model_used} | دقة النموذج: ${result.model_accuracy}%</small>
+                </div>
+            `;
+      }
+
+      // التنبؤ
+      async function predict() {
+        const data = collectData();
+        const loading = document.getElementById("loading");
+        const predictBtn = document.getElementById("predictBtn");
+
+        loading.classList.add("show");
+        predictBtn.disabled = true;
+
+        try {
+          const response = await fetch(`/predict/${currentModel}`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            displayResult(result);
+          } else {
+            alert("خطأ: " + result.error);
+          }
+        } catch (error) {
+          alert("خطأ في الاتصال بالخادم: " + error.message);
+        } finally {
+          loading.classList.remove("show");
+          predictBtn.disabled = false;
+        }
+      }
+
+      // اختيار النموذج
+      document.querySelectorAll(".model-card").forEach((card) => {
+        card.addEventListener("click", () => {
+          document
+            .querySelectorAll(".model-card")
+            .forEach((c) => c.classList.remove("active"));
+          card.classList.add("active");
+          currentModel = card.dataset.model;
+          updateInputs();
+        });
+      });
+
+      // زر التنبؤ
+      document.getElementById("predictBtn").addEventListener("click", predict);
+
+      // تهيئة الحقول
+      updateInputs();
+    </script>
+  </body>
+</html>
