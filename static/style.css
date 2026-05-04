@@ -1,0 +1,644 @@
+/* ================================================
+   style.css - Heart Disease Diagnosis System
+   تصميم واجهة تطبيق Flask
+   ================================================ */
+
+/* ================================================
+   المتغيرات والإعدادات العامة
+   ================================================ */
+
+:root {
+    --primary: #667eea;
+    --primary-dark: #5a67d8;
+    --primary-light: #7f9cf5;
+    --secondary: #764ba2;
+    --success: #2ecc71;
+    --danger: #e74c3c;
+    --warning: #f39c12;
+    --info: #3498db;
+    --dark: #2c3e50;
+    --light: #f8f9fa;
+    --gray: #95a5a6;
+    --white: #ffffff;
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+    --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+    --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --transition: all 0.3s ease;
+}
+
+/* ================================================
+   إعدادات الصفحة الأساسية
+   ================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', 'Tahoma', 'Geneva', 'Verdana', sans-serif;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    min-height: 100vh;
+    padding: 20px;
+    direction: rtl;
+}
+
+/* ================================================
+   الحاوية الرئيسية
+   ================================================ */
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: var(--white);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    overflow: hidden;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* ================================================
+   رأس الصفحة (Header)
+   ================================================ */
+
+.header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: var(--white);
+    padding: 40px 30px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.header::before {
+    content: '❤️';
+    position: absolute;
+    font-size: 150px;
+    opacity: 0.1;
+    bottom: -30px;
+    right: -30px;
+    transform: rotate(-15deg);
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* ================================================
+   المحتوى الرئيسي
+   ================================================ */
+
+.content {
+    display: flex;
+    padding: 30px;
+    gap: 30px;
+}
+
+/* ================================================
+   الشريط الجانبي (Sidebar)
+   ================================================ */
+
+.sidebar {
+    width: 300px;
+    background: var(--light);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    position: sticky;
+    top: 20px;
+    height: fit-content;
+}
+
+.sidebar h3 {
+    color: var(--dark);
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    border-right: 3px solid var(--primary);
+    padding-right: 10px;
+}
+
+/* بطاقات النماذج */
+.model-card {
+    background: var(--white);
+    border: 2px solid #e0e0e0;
+    border-radius: var(--radius-md);
+    padding: 15px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.model-card:hover {
+    transform: translateX(-5px);
+    border-color: var(--primary);
+    box-shadow: var(--shadow-md);
+}
+
+.model-card.active {
+    border-color: var(--primary);
+    background: linear-gradient(135deg, rgba(102,126,234,0.05) 0%, rgba(118,75,162,0.05) 100%);
+}
+
+.model-card.active::before {
+    content: '✓';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: var(--primary);
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+.model-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.model-name {
+    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 5px;
+    color: var(--dark);
+}
+
+.model-accuracy {
+    font-size: 0.75rem;
+    color: var(--gray);
+}
+
+/* قسم المعلومات في الشريط الجانبي */
+.info-section {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #ddd;
+}
+
+.risk-level {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+    font-size: 0.9rem;
+}
+
+.risk-badge {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.risk-high { background-color: var(--danger); }
+.risk-medium { background-color: var(--warning); }
+.risk-low { background-color: var(--success); }
+
+.disclaimer {
+    font-size: 0.7rem;
+    color: var(--gray);
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #ddd;
+}
+
+/* ================================================
+   المنطقة الرئيسية (Main)
+   ================================================ */
+
+.main {
+    flex: 1;
+}
+
+/* عنوان القسم */
+.main h3 {
+    color: var(--dark);
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+}
+
+/* حقول الإدخال */
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--dark);
+    font-size: 0.9rem;
+}
+
+.input-group label .required {
+    color: var(--danger);
+    margin-right: 4px;
+}
+
+.input-group input,
+.input-group select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    transition: var(--transition);
+    font-family: inherit;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.input-group input:hover,
+.input-group select:hover {
+    border-color: var(--primary-light);
+}
+
+/* حقل الرقم مع أسهم */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    opacity: 0.5;
+}
+
+/* ================================================
+   زر التشخيص
+   ================================================ */
+
+.btn-predict {
+    width: 100%;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: var(--white);
+    border: none;
+    padding: 14px 20px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition);
+    margin-top: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-predict:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn-predict:active {
+    transform: translateY(0);
+}
+
+.btn-predict:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ================================================
+   مؤشر التحميل (Loading)
+   ================================================ */
+
+.loading {
+    text-align: center;
+    padding: 30px;
+    display: none;
+}
+
+.loading.show {
+    display: block;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ================================================
+   بطاقة النتيجة (Result Card)
+   ================================================ */
+
+.result-card {
+    margin-top: 25px;
+    padding: 25px;
+    border-radius: var(--radius-lg);
+    text-align: center;
+    animation: fadeInUp 0.4s ease-out;
+    display: none;
+}
+
+.result-card.show {
+    display: block;
+}
+
+/* نتيجة سليم */
+.result-healthy {
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+    border: 2px solid var(--success);
+}
+
+/* نتيجة مريض */
+.result-disease {
+    background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+    border: 2px solid var(--danger);
+}
+
+.result-icon {
+    font-size: 64px;
+    margin-bottom: 15px;
+}
+
+.result-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.result-healthy .result-title {
+    color: var(--success);
+}
+
+.result-disease .result-title {
+    color: var(--danger);
+}
+
+.result-probability {
+    font-size: 3rem;
+    font-weight: bold;
+    margin: 15px 0;
+}
+
+.result-healthy .result-probability {
+    color: var(--success);
+}
+
+.result-disease .result-probability {
+    color: var(--danger);
+}
+
+.result-risk {
+    font-size: 1.1rem;
+    margin: 10px 0;
+}
+
+.result-recommendation {
+    background: rgba(255, 255, 255, 0.7);
+    padding: 15px;
+    border-radius: var(--radius-md);
+    margin-top: 15px;
+    text-align: right;
+}
+
+.result-recommendation strong {
+    color: var(--dark);
+}
+
+.result-recommendation small {
+    display: block;
+    margin-top: 10px;
+    color: var(--gray);
+    font-size: 0.75rem;
+}
+
+/* ================================================
+   أنماط إضافية
+   ================================================ */
+
+/* الفاصل */
+hr {
+    margin: 15px 0;
+    border: none;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #ddd, transparent);
+}
+
+/* روابط */
+a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+a:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+/* ================================================
+   الرسوم المتحركة (Animations)
+   ================================================ */
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* ================================================
+   التجاوب مع الأجهزة المختلفة (Responsive)
+   ================================================ */
+
+/* للأجهزة اللوحية */
+@media (max-width: 992px) {
+    .content {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        position: static;
+    }
+    
+    .model-card:hover {
+        transform: translateX(0);
+    }
+}
+
+/* للهواتف */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .header {
+        padding: 25px 20px;
+    }
+    
+    .header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .header p {
+        font-size: 0.9rem;
+    }
+    
+    .content {
+        padding: 20px;
+    }
+    
+    .result-title {
+        font-size: 1.4rem;
+    }
+    
+    .result-probability {
+        font-size: 2rem;
+    }
+    
+    .btn-predict {
+        padding: 12px;
+        font-size: 1rem;
+    }
+}
+
+/* للهواتف الصغيرة */
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 1.4rem;
+    }
+    
+    .result-icon {
+        font-size: 48px;
+    }
+    
+    .result-title {
+        font-size: 1.2rem;
+    }
+    
+    .result-probability {
+        font-size: 1.6rem;
+    }
+}
+
+/* ================================================
+   دعم الوضع الليلي (Dark Mode)
+   ================================================ */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --light: #1a1a2e;
+        --white: #16213e;
+        --dark: #e2e2e2;
+        --gray: #aaa;
+    }
+    
+    .model-card {
+        background: #0f3460;
+        border-color: #1a1a2e;
+    }
+    
+    .model-card.active {
+        background: #1a1a2e;
+    }
+    
+    .input-group input,
+    .input-group select {
+        background: #0f3460;
+        color: var(--dark);
+        border-color: #1a1a2e;
+    }
+    
+    .result-recommendation {
+        background: rgba(0, 0, 0, 0.3);
+    }
+}
+
+/* ================================================
+   أنماط للطباعة (Print)
+   ================================================ */
+
+@media print {
+    body {
+        background: white;
+        padding: 0;
+    }
+    
+    .sidebar,
+    .btn-predict,
+    .loading {
+        display: none;
+    }
+    
+    .result-card {
+        border: 1px solid #ddd;
+        box-shadow: none;
+    }
+    
+    .container {
+        box-shadow: none;
+    }
+}
+
+/* ================================================
+   أنماط التمرير (Scrollbar)
+   ================================================ */
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-dark);
+}
